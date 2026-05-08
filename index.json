@@ -1,0 +1,23 @@
+const mineflayer = require('mineflayer')
+const http = require('http')
+
+// Render'ın uyumaması için küçük bir web sunucusu
+http.createServer((req, res) => {
+  res.write("Bot Aktif!");
+  res.end();
+}).listen(8080);
+
+function createBot() {
+    const bot = mineflayer.createBot({
+        host: '50.117.3.3',
+        port: 25876,
+        username: 'BekciEnes',
+        version: false
+    })
+
+    bot.on('login', () => console.log('Bot sunucuya girdi!'))
+    bot.on('end', () => setTimeout(createBot, 5000))
+    bot.on('error', err => console.log(err))
+}
+
+createBot()
