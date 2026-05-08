@@ -1,23 +1,30 @@
 const mineflayer = require('mineflayer')
-const http = require('http')
-
-// Render'ın uyumaması için küçük bir web sunucusu
-http.createServer((req, res) => {
-  res.write("Bot Aktif!");
-  res.end();
-}).listen(8080);
 
 function createBot() {
     const bot = mineflayer.createBot({
         host: '50.117.3.3',
         port: 25876,
         username: 'BekciEnes',
-        version: false
+        version: "1.19.3", // Sürümü tırnak içinde yazdığından emin ol
+        checkTimeoutInterval: 60000 // Bağlantı kopmaması için süre tanı
     })
 
-    bot.on('login', () => console.log('Bot sunucuya girdi!'))
-    bot.on('end', () => setTimeout(createBot, 5000))
-    bot.on('error', err => console.log(err))
+    bot.on('login', () => {
+        console.log('ZAFER! Bot içeri daldı.')
+    })
+
+    bot.on('error', (err) => {
+        console.log('Hata var aga: ', err.message)
+    })
+
+    bot.on('kicked', (reason) => {
+        console.log('Sunucu bizi kovdu, sebep: ', reason)
+    })
+
+    bot.on('end', () => {
+        console.log('Bağlantı koptu, 10 saniye sonra tekrar deniyorum...')
+        setTimeout(createBot, 10000)
+    })
 }
 
 createBot()
